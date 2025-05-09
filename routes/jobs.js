@@ -50,4 +50,34 @@ router.post('/', (req, res) => {
   });
 });
 
+// DELETE /jobs/:id - Delete a job by ID
+router.delete('/:id', (req, res) => {
+  const jobId = req.params.id;
+
+  const sql = 'DELETE FROM jobs WHERE id = ?';
+
+  db.getConnection((err, connection) => {
+    if (err) {
+      console.error('Connection error:', err.message);
+      return res.status(500).json({ error: 'Database connection error' });
+    }
+
+    connection.query(sql, [jobId], (err, result) => {
+      connection.release();
+
+      if (err) {
+        console.error('Error deleting job:', err.message);
+        return res.status(500).json({ error: 'Database delete failed' });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Job not found' });
+      }
+
+      res.json({ message: `Job with ID ${jobId} deleted` });
+    });
+  });
+});
+
+
 module.exports = router;

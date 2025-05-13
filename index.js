@@ -13,6 +13,4 @@ app.get('/', (req, res) => {
   res.send('API is running');
 });
 
-app.listen(3000, () => {
-  console.log('Server is live on http://localhost:3000');
-});
+module.exports = app;
